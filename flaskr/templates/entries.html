@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% block title %}Eurovision{% endblock %}
+{% block content %}
+
+<h3>All entires...</h3>
+
+{% for entry in entries %}
+<section>
+    <h3>{{ entry.username }}</h3>
+            <article>
+            <header>Act</header>
+            <label>
+                Country
+                <input type="text" name="country"
+                       placeholder=Sweden
+                       value="{{ entry.country if entry.country }}"
+                       {{ 'aria-invalid=false' if entry.country }}
+                >
+            </label>
+            <label>
+                Song Name - {{ entry.song_name }}
+                <input type="text" name="song_name" placeholder=Tattoo
+                       value="{{ entry.song_name if entry.song_name }}"
+                       {{ 'aria-invalid=false' if entry.song_name }}
+                >
+            </label>
+            <label>
+                Team Colour
+                <input type="color" name="favourite_colour"
+                       value="{{ entry.favourite_colour if entry.favourite_colour else '#ff0000' }}"
+                       {{ 'aria-invalid=false' if entry.favourite_colour }}
+                >
+            </label>
+        </article>
+
+    <article>
+        <header>Flag</header>
+        <div class="grid">
+            {% if entry.flag_filename %}
+            <div>
+                <img
+                        style="max-height: 200px;"
+                        src="{{ url_for('signup.entry_asset', filename=entry.flag_filename) }}"
+                >
+            </div>
+            {% endif %}
+        </div>
+    </article>
+
+    <article>
+        <header>Song</header>
+        {% if entry.song_url %}
+        <button type="button" onclick="window.open('{{ entry.song_url }}', '_blank')">
+            View
+        </button>
+        {% endif %}
+        {% if entry.song_filename %}
+        <video width="auto" height="200" controls>
+            <source src="{{ url_for('signup.entry_asset', filename=entry.song_filename) }}">
+        </video>
+        {% endif %}
+    </article>
+
+    <article>
+        <header>Postcard</header>
+        {% if entry.postcard_url %}
+        <button type="button" onclick="window.open('{{ entry.postcard_url }}', '_blank')">
+            View
+        </button>
+        {% endif %}
+
+        {% if entry.postcard_filename %}
+
+        <video width="auto" height="200" controls>
+            <source src="{{ url_for('signup.entry_asset', filename=entry.postcard_filename) }}">
+        </video>
+        {% endif %}
+
+    </article>
+
+</section>
+{% endfor %}
+
+<script>
+    function linkUrlAndFile(urlId, fileId) {
+      const url = document.getElementById(urlId);
+      const file = document.getElementById(fileId);
+
+      url.addEventListener('input', () => {
+        file.disabled = url.value.trim().length > 0;
+      });
+
+      file.addEventListener('change', () => {
+        url.disabled = file.files.length > 0;
+      });
+    }
+
+    linkUrlAndFile('song_url', 'song_file');
+    linkUrlAndFile('postcard_url', 'postcard_file');
+</script>
+
+{% endblock %}

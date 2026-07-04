@@ -1,0 +1,24 @@
+# I Can't Believe It's Not Eurovision
+
+This project is a mock Eurovision submission and voting app. Contestants role-play as countries, register entries, and vote through the website. The site also hosts a live-updating scoreboard that imitates a real Eurovision result flow.
+Auth is handled by a different side on the same domain. We can leverage this via a shared sessions through Redis
+
+This project is just a fun little side project for me and a few friends
+
+
+### How to dev
+
+- python3 -m pip install -r requirements.txt
+- python3 -m flask --app flaskr:create_app run --debug
+
+
+### Issues that need fixing now
+
+Everything
+
+
+### Known and (current) accepted issues (Exceptions)
+
+1. Json file storage is used for contestant entries. This is awful, but acceptable.
+2. File uploads not being securely checked/verified for malicious content
+3. No tests :) I'm not writing tests unless i'm getting paid

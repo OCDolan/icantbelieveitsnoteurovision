@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Eurovision{% endblock %}
+{% block content %}
+
+<img src="{{ url_for('static', filename='main/icbine.png') }}"
+     style="display: block; margin: 0px auto; max-width: 400px; width: 100%; border-radius: 50%/10%;">
+
+<h2>Welcome to Eurovision{{ '' if not logged_in else ' ' + li.preferred_name }}!</h2>
+
+<section>
+    <p>
+        TODO Eurovision welcome text and rules here!
+
+    {% if not logged_in %}
+    <p>You'll need to be logged in to do Eurvision things...
+        <a href="{{ url_for('main.login', after_login_redirect=this_page_url) }}">Login</a> Now!
+        {% else %}
+    <div class="grid">
+        <a href="{{ url_for('signup.entry') }}">
+            <button class="primary">Edit <em>my</em> entry</button>
+        </a>
+        <a href="{{ url_for('signup.entries') }}">
+            <button class="secondary">View all {{ entries | length }} entries</button>
+        </a>
+    </div>
+    {% endif %}
+</section>
+
+<section>
+    <h3>Current entries:</h3>
+    {% for entry in entries %}
+    {% if entry.country %}
+    <article>
+        <header>{{ entry.country }}</header>
+        <p>{{ entry.username }}</p>
+    </article>
+    {% endif %}
+    {% endfor %}
+</section>
+
+{% endblock %}

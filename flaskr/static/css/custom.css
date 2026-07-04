@@ -1,0 +1,50 @@
+:root {
+  --pico-font-size: 16px;
+}
+[data-theme="light"] {
+  --pico-background-color: #c8c7b8;
+}
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --pico-background-color: #c8c7b8;
+}
+
+[data-theme="dark"] {
+  --pico-background-color: #000000;
+}
+
+section {
+  border: solid var(--pico-muted-border-color) 6px;
+  border-radius: 6px;
+  background: color-mix(in srgb, #888 10%, transparent);
+  padding: 8px;
+}
+.save-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: var(--card-background-color);
+
+  /* Match Pico’s card style */
+  border-top: 1px solid var(--muted-border-color);
+
+  margin-bottom: 50px;
+  margin-left: 50px;
+  margin-right: 50px;
+  display: flex;
+  justify-content: flex-end;
+
+  z-index: 999;
+}
+
+/* Keep Pico’s default button styling */
+.save-bar button {
+  margin: 0; /* prevent vertical misalignment */
+  width: auto;
+  justify-content: right;
+
+  /* Floating effect without blur */
+  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.4);
+}

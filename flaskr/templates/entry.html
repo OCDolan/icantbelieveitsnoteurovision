@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+{% block title %}Eurovision{% endblock %}
+{% block content %}
+
+<section>
+    <h3>"Eurovision" - Entry Submission!</h3>
+
+    <form method="POST" action="{{ url_for('signup.entry_edit') }}" enctype="multipart/form-data">
+
+        <article>
+            <header>Act</header>
+            <label>
+                Country
+                <input type="text" name="country"
+                       placeholder=Sweden
+                       value="{{ entry.country if entry.country }}"
+                       {{ 'aria-invalid=false' if entry.country }}
+                >
+            </label>
+            <label>
+                Song Name - {{ entry.song_name }}
+                <input type="text" name="song_name" placeholder=Tattoo
+                       value="{{ entry.song_name if entry.song_name }}"
+                       {{ 'aria-invalid=false' if entry.song_name }}
+                >
+            </label>
+            <label>
+                Team Colour
+                <input type="color" name="favourite_colour"
+                       value="{{ entry.favourite_colour if entry.favourite_colour else '#ff0000' }}"
+                       {{ 'aria-invalid=false' if entry.favourite_colour }}
+                >
+            </label>
+        </article>
+
+        <article>
+            <header>Flag</header>
+            <div class="grid">
+                <div>
+                    <label>
+                        Upload Flag Image
+                        <input type="file" name="flag_file" accept="image/*">
+                    </label>
+                </div>
+                {% if entry.flag_filename %}
+                <div>
+                    <img
+                            style="max-height: 200px;"
+                            src="{{ url_for('signup.entry_asset', filename=entry.flag_filename) }}"
+                    >
+                </div>
+                {% endif %}
+            </div>
+        </article>
+
+        <article>
+            <header>Song</header>
+            <p>Either a URL or a file upload.</p>
+            <fieldset role="group">
+                Song URL
+                <input type="text" id="song_url" name="song_url"
+                       {{ 'aria-invalid=false' if entry.song_url }}
+                {{ 'value=' + entry.song_url if entry.song_url else
+                'placeholder=https://www.youtube.com/watch?v=dQw4w9WgXcQ' }}
+                >
+                {% if entry.song_url %}
+                <button type="button" onclick="window.open('{{ entry.song_url }}', '_blank')">
+                    View
+                </button>
+                {% endif %}
+            </fieldset>
+            <strong>... OR ...</strong>
+            <div class="grid">
+                <div>
+                    <label>
+                        File Upload
+                        <input type="file" id="song_file" name="song_file" accept="video/*"
+                               {{ 'aria-invalid=false' if entry.song_file }}
+                        >
+                    </label>
+                </div>
+                {% if entry.song_filename %}
+                <div>
+                    <video width="auto" height="200" controls>
+                        <source src="{{ url_for('signup.entry_asset', filename=entry.song_filename) }}">
+                    </video>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+
+        <article>
+            <header>Postcard</header>
+            <p>Either a URL or a file upload.</p>
+            <fieldset role="group">
+                Song URL
+                <input type="text" id="postcard_url" name="postcard_url"
+                       placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                       value="{{ entry.postcard_url if entry.postcard_url }}"
+                       {{ 'aria-invalid=false' if entry.postcard_url }}
+                >
+                {% if entry.postcard_url %}
+                <button type="button" onclick="window.open('{{ entry.postcard_url }}', '_blank')">
+                    View
+                </button>
+                {% endif %}
+            </fieldset>
+            <strong>... OR ...</strong>
+            <div class="grid">
+                <div>
+                    <label>
+                        File Upload
+                        <input type="file" id="postcard_file" name="postcard_file" accept="video/*"
+                               {{ 'aria-invalid=false' if entry.postcard_file }}
+                        >
+                    </label>
+                </div>
+                {% if entry.postcard_filename %}
+                <div>
+                    <video width="auto" height="200" controls>
+                        <source src="{{ url_for('signup.entry_asset', filename=entry.postcard_filename) }}">
+                    </video>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+
+        <div class="save-bar">
+            <button type="submit">Save Entry</button>
+        </div>
+
+    </form>
+</section>
+
+<script>
+    function linkUrlAndFile(urlId, fileId) {
+      const url = document.getElementById(urlId);
+      const file = document.getElementById(fileId);
+
+      url.addEventListener('input', () => {
+        file.disabled = url.value.trim().length > 0;
+      });
+
+      file.addEventListener('change', () => {
+        url.disabled = file.files.length > 0;
+      });
+    }
+
+    linkUrlAndFile('song_url', 'song_file');
+    linkUrlAndFile('postcard_url', 'postcard_file');
+</script>
+
+{% endblock %}

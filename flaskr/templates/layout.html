@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pico/pico.yellow.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <title>I can't believe it's not Eurovision</title>
+</head>
+<body>
+<nav class="container">
+    <ul>
+        <li><strong><a href="{{ url_for('main.root') }}">Home</a></strong></li>
+    </ul>
+    <ul>
+        <li>
+            <details class="dropdown" style="width: 100%;">
+                <summary>
+                    menu
+                </summary>
+                <ul>
+                    <li><a href="{{ url_for('signup.root') }}">Signup</a></li>
+                </ul>
+            </details>
+        </li>
+    </ul>
+    <ul>
+        {% if logged_in %}
+        <details class="dropdown">
+            <summary>
+                Account
+            </summary>
+            <ul dir="rtl">
+                <li><a href="{{ url_for('main.user') }}">Details</a></li>
+                <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
+            </ul>
+        </details>
+        {% else %}
+        <li>
+            <a href="{{ url_for('main.login', after_login_redirect=this_page_url) }}" class="contrast">login</a>
+        </li>
+        {% endif %}
+        <li>
+            <button id="theme-toggle">☼☽ theme</button>
+        </li>
+    </ul>
+</nav>
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+<footer class="container">
+    <small>
+    </small>
+</footer>
+<script type="text/javascript" src="{{ url_for('static', filename='css/theme.js') }}"></script>
+</body>
+</html>

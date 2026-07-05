@@ -2,6 +2,9 @@ import datetime
 from flask import Blueprint, redirect, url_for, current_app, session, request
 
 from logging import getLogger
+
+from flaskr.shared import LoginInfo2
+
 logger = getLogger(__name__)
 
 bp = Blueprint('main', __name__, url_prefix='/')
@@ -19,6 +22,8 @@ def healthz():
 
 @bp.route('/login', methods=['GET'])
 def login():
+    session['after_login_redirect'] = request.args.get('after_login_redirect', url_for('main.root'))
+
     # If flask is in debug mode, make the login button login automatically as a test user!
     if current_app.debug:
         session["login_data"] = {
@@ -27,11 +32,12 @@ def login():
             'email': "testuser1@email.com",
             'preferred_username': "User1",
             'expires_at': (datetime.datetime.now() + datetime.timedelta(minutes=5)).timestamp(),
-            'roles': ['role1', 'role2']
+            'roles': ['role1', 'role2', 'euroadmin']
         }
-        return redirect(request.args.get('after_login_redirect', '/'))
+        return redirect(session.pop('after_login_redirect'))
 
-    return redirect('/login')  # Redirects to the root site, not in this repo!
+    return redirect(f'/login')
+    # Redirects to the root site, not in this repo!
     # This handles login for us, and will return us back here :)
 
 
@@ -43,5 +49,6 @@ def user():
 
 @bp.route('/logout')
 def logout():
-    return redirect('/logout')  # Redirects to the root site, not in this repo!
-    # This handles logout for us, and will return us back here :)
+    after_logout_redirect = request.args.get('after_login_redirect', url_for('main.root'))
+    LoginInfo2.logout()
+    return redirect(after_logout_redirect)

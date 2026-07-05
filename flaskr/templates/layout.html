@@ -34,7 +34,7 @@
             </summary>
             <ul dir="rtl">
                 <li><a href="{{ url_for('main.user') }}">Details</a></li>
-                <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
+                <li><a href="{{ url_for('main.logout', after_login_redirect=this_page_url) }}">Logout</a></li>
             </ul>
         </details>
         {% else %}

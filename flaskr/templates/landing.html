@@ -7,10 +7,40 @@
 
 <h2>Welcome to Eurovision{{ '' if not logged_in else ' ' + li.preferred_name }}!</h2>
 
+<p>
+    As the Executive Supervisor of this glorious, completely legally distinct musical extravaganza, it is my
+    absolute honour to welcome you to the official announcement of "I Can’t Believe It’s Not Eurovision!"
+    <br>
+    While my distant, slightly more corporate cousin Martin Oestrogens gets to say "You're good to go," I am here to
+    tell you that we are almost good to go. It's time to submit your entries!
+    <br>
+    <strong>Entries will close on Saturday, 3rd October, 2026</strong>
+    <br>
+<h4>Here are the official, highly confidential details</h4>
+<ul>
+    <li>The Master of Ceremonies: Me, Martin Fuchsia</li>
+    <li>Your host country this year: North Coldenberg!</li>
+    <li>The Mission & this years theme: To witness the highest of highs, the lowest of lows, and an aggressive
+        amount of key changes
+    </li>
+    <li>The Date: TBD</li>
+    <li>The Venue: TBD</li>
+</ul>
+<h4>Rules</h4>
+<ul>
+    <li>Songs must be under 4 mins in length</li>
+    <li>Songs must have lyrics. They can not be instrumental</li>
+    <li>You can enter a song from a previous Eurovision act. This is both Eurovision and I can't believe it's not
+        Eurovision.
+        This means you can enter a song by Baby Lasagna but not Rim Tim Tagi Dim
+    </li>
+    <li>You can not enter a song from last years winner. This means nothing from North Coldenburg (Oliver Tree) and
+        nothing from Dara
+    </li>
+</ul>
+<strong>The countdown to the sparkle begins now!</strong>
+<br><br>
 <section>
-    <p>
-        TODO Eurovision welcome text and rules here!
-
     {% if not logged_in %}
     <p>You'll need to be logged in to do Eurvision things...
         <a href="{{ url_for('main.login', after_login_redirect=this_page_url) }}">Login</a> Now!

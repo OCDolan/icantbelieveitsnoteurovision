@@ -11,6 +11,8 @@ This project is just a fun little side project for me and a few friends
 - python3 -m pip install -r requirements.txt
 - python3 -m flask --app flaskr:create_app run --debug
 
+You may want to set BASEPATH in library_eurovision.py to another directory to store the entries...
+
 
 ### Issues that need fixing now
 

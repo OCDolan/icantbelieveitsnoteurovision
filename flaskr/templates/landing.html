@@ -16,17 +16,20 @@
     <br>
     <strong>Entries will close on Saturday, 3rd October, 2026</strong>
     <br>
-<h4>Here are the official, highly confidential details</h4>
+<hr>
+<strong>Here are the official, highly confidential details</strong>
 <ul>
     <li>The Master of Ceremonies: Me, Martin Fuchsia</li>
     <li>Your host country this year: North Coldenberg!</li>
-    <li>The Mission & this years theme: To witness the highest of highs, the lowest of lows, and an aggressive
-        amount of key changes
+    <li>The Mission & this years theme: To witness the highest of highs, the lowest of lows, an aggressive
+        amount of key changes, and an unhinged ammount of glitter
     </li>
-    <li>The Date: TBD</li>
-    <li>The Venue: TBD</li>
+    <li>The Date: Saturday, November 21st</li>
+    <li>The Venue: TBA (Negotiations with the living room cat are ongoing)</li>
+    <li>The Master of Ceremonies: Still me, Martin Periwinkle</li>
 </ul>
-<h4>Rules</h4>
+<hr>
+<h4>This Years rules:</h4>
 <ul>
     <li>Songs must be under 4 mins in length</li>
     <li>Songs must have lyrics. They can not be instrumental</li>
@@ -38,6 +41,15 @@
         nothing from Dara
     </li>
 </ul>
+<hr>
+<h4>Usefull files</h4>
+<p>Postcard song/theme music can be downloaded from
+    <a href="{{ url_for('static', filename='Eurovision 2026 Postcard Theme _ 1.mp3') }}" download>here</a>,
+    <a href="{{ url_for('static', filename='Eurovision 2026 Postcard Theme _ 2.mp3') }}" download>here</a>,
+    <a href="{{ url_for('static', filename='Eurovision 2026 Postcard Theme _ 3.mp3') }}" download>here</a>
+    and <a href="{{ url_for('static', filename='Eurovision 2026 Postcard Theme _ 4.mp3') }}" download>here</a>,
+    (But feel free to use the theme from any year)
+</p>
 <strong>The countdown to the sparkle begins now!</strong>
 <br><br>
 <section>
@@ -50,22 +62,25 @@
             <button class="primary">Edit <em>my</em> entry</button>
         </a>
         <a href="{{ url_for('signup.entries') }}">
-            <button class="secondary">View all {{ entries | length }} entries</button>
+            <button class="secondary">View all {{ entries | length }} in-progress and complete entries</button>
+        </a>
+        <a href="{{ url_for('signup.entries', contestants=True) }}">
+            <button class="secondary">View all {{ contestants | length }} complete entries</button>
         </a>
     </div>
     {% endif %}
 </section>
 
+{% if logged_in %}
 <section>
     <h3>Current entries:</h3>
     {% for entry in entries %}
-    {% if entry.country %}
     <article>
-        <header>{{ entry.country }}</header>
-        <p>{{ entry.username }}</p>
+        <header>{{ entry.username }}</header>
+        <strong>{{ entry.country }}</strong>
     </article>
-    {% endif %}
     {% endfor %}
 </section>
+{% endif %}
 
 {% endblock %}

@@ -74,13 +74,17 @@ class LoginInfo2:
 
 def get_default_context():
     logger.warning("Getting default context...")
-    return {
-        "this_page_url": url_for(request.url_rule.endpoint),
-        "this_page_url_external": url_for(request.url_rule.endpoint, _external=True),
+    ctx = {
         "li": LoginInfo2.retrieve(),
         "logged_in": LoginInfo2.is_logged_in(),
     }
-
+    try:
+        ctx['this_page_url'] = url_for(request.url_rule.endpoint)
+        ctx['this_page_url_external'] = url_for(request.url_rule.endpoint, _external=True)
+    except Exception as e:
+        ctx['this_page_url_external'] = None
+        ctx['this_page_url'] = None
+    return ctx
 
 def after_login_redirect():
     # Returns the user back where they came from before they had to do a login!

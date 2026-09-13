@@ -9,7 +9,7 @@ from werkzeug.datastructures import Authorization
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from . import main, signup, vote
+from . import main, signup, vote, admin
 
 
 def create_app():
@@ -19,6 +19,7 @@ def create_app():
     app.register_blueprint(main.bp)
     app.register_blueprint(signup.bp)
     app.register_blueprint(vote.bp)
+    app.register_blueprint(admin.bp)
 
     app.wsgi_app = ProxyFix(
         app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1

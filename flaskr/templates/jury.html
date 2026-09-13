@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Eurovision{% endblock %}
+{% block content %}
+
+<section>
+    <h3>Jury Submission</h3>
+
+    <p>As a member of the Jury, your job is to professionally judge and critique the performance.
+        You should judge the <strong>song</strong> on the following criteria...
+    <ul>
+        <li>Vocal capacity: The singing skill, tone, and control of the performer(s)</li>
+        <li>Performance on stage: The staging, camera presence, and delivery of the act</li>
+        <li>Composition and originality: The quality, structure, and uniqueness of the song itself.</li>
+        <li>Overall impression: The cohesiveness and impact of the complete package.</li>
+    </ul>
+    <hr>
+    <p>Please enter your vote for your favourite <strong>song</strong></p>
+
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+
+    <form target="dummyframe" id="voteForm" method="POST" action="{{ url_for('vote.jury_submit') }}">
+
+        {% for points_num in points_nums_available %}
+        <label>
+            {{ points_num }} Points
+            <select {{ 'disabled' if current_votes['announce'] }} onchange="this.form.submit()" name="points_{{ points_num }}">
+                <option value="">Select…</option>
+                {% for country in countries %}
+                <option value="{{ country }}"
+                        {{ 'selected' if current_votes[country] == points_num else '' }}>{{ country }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+        {% endfor %}
+    </form>
+
+    <form target="dummyframe" id="announceForm" method="POST" action="{{ url_for('vote.jury_announce') }}">
+    </form>
+    <form target="dummyframe" id="announce12Form" method="POST" action="{{ url_for('vote.jury_announce_12') }}">
+    </form>
+
+    <div role="group">
+        <button type="submit" form="announceForm">Announce 2,4,6,8 and 10 points</button>
+        <button class="contrast" type="submit" form="announce12Form"><strong>Announce your 12 Points!</strong></button>
+    </div>
+
+</section>
+
+{% endblock %}

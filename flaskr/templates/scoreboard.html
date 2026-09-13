@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block title %}Eurovision{% endblock %}
+{% block content %}
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+
+<style>
+    body { padding: 2rem; }
+    #scoreboard {
+        margin: auto;
+        position: relative;
+    }
+    .article {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 50px;
+        background: #f8f8f8;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        position: relative;
+    }
+    .article img {
+        width: 100px;
+        height: 60px;
+        margin-left: 2rem;
+        margin-right: 1rem;
+        border-radius: 10px;
+    }
+    .name {
+        flex: 1;
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+    .points {
+        font-size: 2rem;
+    }
+</style>
+
+<h1>Eurovision Scoreboard</h1>
+<article>
+<label for="autoToggle">
+    <input type="checkbox" id="autoToggle" role="switch" checked>
+    Auto‑update scoreboard
+</label>
+    </article>
+<div id="scoreboard"></div>
+
+<script>
+    let autoUpdate = true;
+    let updateTimer = null;
+
+    const toggle = document.getElementById("autoToggle");
+    toggle.addEventListener("change", () => {
+        autoUpdate = toggle.checked;
+        if (autoUpdate) {
+            update(); // run immediately
+            updateTimer = setInterval(update, 1000);
+        } else {
+            clearInterval(updateTimer);
+        }
+    });
+
+    // Start auto-update on page load
+    update();
+    updateTimer = setInterval(update, 1000);
+
+
+    const scoreboard = document.getElementById("scoreboard");
+
+    async function fetchPoints() {
+        const res = await fetch("{{ url_for('admin.points') }}");
+        return await res.json();
+    }
+
+    function animateReorder(newData) {
+        // Map old positions
+        const oldPositions = {};
+        document.querySelectorAll(".article").forEach(el => {
+            oldPositions[el.id] = el.getBoundingClientRect().top;
+        });
+
+        // Sort data
+        newData.sort((a, b) => b.points - a.points);
+
+        // Rebuild DOM
+        scoreboard.innerHTML = "";
+        newData.forEach(c => {
+            const div = document.createElement("div");
+            div.className = "article";
+            div.id = c.id;
+            div.style.setProperty("border-bottom", `10px solid #${c.colour}`, "important");
+            div.innerHTML = `
+                <img src="${c.flag_url}">
+                <span class="name">${c.name}</span>
+                <span class="points">${c.points}</span>
+            `;
+            scoreboard.appendChild(div);
+        });
+
+        // Animate movement based on old → new positions
+        document.querySelectorAll(".article").forEach(el => {
+            const newTop = el.getBoundingClientRect().top;
+            const oldTop = oldPositions[el.id];
+
+            if (oldTop !== undefined) {
+                const delta = oldTop - newTop;
+                gsap.fromTo(el,
+                        { y: delta },
+                        { y: 0, duration: 1, ease: "slow(0.1,2,false)" }
+                );
+            }
+        });
+    }
+
+    async function update() {
+        const data = await fetchPoints();
+        animateReorder(data);
+    }
+</script>
+
+{% endblock %}

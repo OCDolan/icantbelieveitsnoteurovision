@@ -1,5 +1,6 @@
 import os
 import uuid
+from pathlib import Path
 
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for, app, current_app, send_file
 from werkzeug.utils import secure_filename
@@ -24,6 +25,7 @@ def root():
 def landing():
     context = get_default_context()
     context['entries'] = Eurovision.get_entries()
+    context['contestants'] = Eurovision.get_contestants()
     return render_template('landing.html', **context)
 
 
@@ -33,7 +35,10 @@ def entries():
         return render_error_page("You are not allowed to access this page.", 403)
 
     context = get_default_context()
-    context['entries'] = Eurovision.get_entries()
+    if request.args.get('contestants'):  # Ie, get only fully submitted entries
+        context['entries'] = Eurovision.get_contestants()
+    else:
+        context['entries'] = Eurovision.get_entries()
     return render_template('entries.html', **context)
 
 
@@ -54,7 +59,7 @@ def entry():
 def entry_asset(filename):
     if not LoginInfo2.is_logged_in():
         return render_error_page("Please login first!", 401)
-    return send_file(os.path.join(BASEPATH, secure_filename(filename)))
+    return send_file(Path(BASEPATH, secure_filename(filename)).absolute())
 
 
 @bp.route('/entry', methods=['POST'])
@@ -83,7 +88,7 @@ def entry_edit():
     if song_file:
         ext = secure_filename(song_file.filename).split('.')[-1]
         song_filename = f"{uuid.uuid4()}.{ext}"
-        song_file.save(os.path.join(BASEPATH, song_filename))
+        song_file.save(Path(BASEPATH, song_filename))
         entry.song_filename = song_filename
         entry.song_url = None
 
@@ -95,14 +100,14 @@ def entry_edit():
     if postcard_file:
         ext = secure_filename(postcard_file.filename).split('.')[-1]
         postcard_filename = f"{uuid.uuid4()}.{ext}"
-        postcard_file.save(os.path.join(BASEPATH, postcard_filename))
+        postcard_file.save(Path(BASEPATH, postcard_filename))
         entry.postcard_filename = postcard_filename
 
     flag_file = request.files.get('flag_file', None)
     if flag_file:
         ext = secure_filename(flag_file.filename).split('.')[-1]
         flag_filename = f"{uuid.uuid4()}.{ext}"
-        flag_file.save(os.path.join(BASEPATH, flag_filename))
+        flag_file.save(Path(BASEPATH, flag_filename))
         entry.flag_filename = flag_filename
 
     favourite_colour = request.form.get('favourite_colour')

@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}Eurovision Admin Page{% endblock %}
+{% block content %}
+
+<section>
+    <h3>Admin Panel</h3>
+
+    <a href="{{ url_for('admin.scoreboard') }}">Click here to go to the Scoreboard</a>
+
+    <fieldset>
+        <label>
+            <input id="voting_open_switch" name="terms" type="checkbox" role="switch"/>
+            Is Voting Open?
+        </label>
+        <form action="{{ url_for('admin.reset_jury_votes') }}" method="post">
+            <button name="reset jury votes" value="ok">⚠ Reset Jury Votes!</button>
+        </form>
+        <form action="{{ url_for('admin.reset_public_votes') }}" method="post">
+            <button name="reset public votes" value="ok">⚠ Reset Public Votes!</button>
+        </form>
+    </fieldset>
+
+    # TODO See who has/nt voted
+    # TODO Configure "game" settings???
+
+</section>
+<script>
+    const toggle = document.getElementById("voting_open_switch");
+
+    // Load current state on page load
+    async function loadState() {
+      try {
+        const res = await fetch("{{ url_for('admin.api_voting_open') }}", { method: "GET" });
+        const data = await res.json();
+        const current = !!data.value;
+        toggle.checked = current;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Save state on change
+    async function saveState(value) {
+      try {
+        const res = await fetch("{{ url_for('admin.api_voting_open') }}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value })
+        });
+        if (!res.ok) throw new Error("Request failed");
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    toggle.addEventListener("change", () => {
+      saveState(toggle.checked);
+    });
+
+    loadState();
+  </script>
+
+{% endblock %}

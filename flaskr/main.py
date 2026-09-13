@@ -1,4 +1,6 @@
 import datetime
+import random
+
 from flask import Blueprint, redirect, url_for, current_app, session, request
 
 from logging import getLogger
@@ -26,13 +28,14 @@ def login():
 
     # If flask is in debug mode, make the login button login automatically as a test user!
     if current_app.debug:
+        user = random.choice(['TestUser1', 'TestUser2'])
         session["login_data"] = {
             'provider': 'test',
-            'unique_username': "TestUser1",
+            'unique_username': user,
             'email': "testuser1@email.com",
-            'preferred_username': "User1",
-            'expires_at': (datetime.datetime.now() + datetime.timedelta(minutes=5)).timestamp(),
-            'roles': ['role1', 'role2', 'euroadmin']
+            'preferred_username': user,
+            'expires_at': (datetime.datetime.now() + datetime.timedelta(minutes=999)).timestamp(),
+            'roles': ['euroadmin']
         }
         return redirect(session.pop('after_login_redirect'))
 

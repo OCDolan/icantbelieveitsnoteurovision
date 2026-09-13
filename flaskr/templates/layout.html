@@ -22,6 +22,10 @@
                 </summary>
                 <ul>
                     <li><a href="{{ url_for('signup.root') }}">Signup</a></li>
+                    <li><a href="{{ url_for('vote.root') }}">Vote</a></li>
+                    {% if 'euroadmin' in li['roles'] %}
+                    <li><a href="{{ url_for('admin.root') }}">Admin Panel</a></li>
+                    {% endif %}
                 </ul>
             </details>
         </li>
